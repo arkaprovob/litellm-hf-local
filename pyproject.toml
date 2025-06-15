@@ -1,0 +1,50 @@
+[project]
+name = "litellm-hf-local"
+version = "0.1.0"
+description = "HuggingFace Local Adapters (V1 & V2) for LiteLLM - Run HuggingFace models locally with advanced features like automatic chat templates, quantization, and streaming"
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.7.0",
+    "hatchling>=1.27.0",
+    "litellm>=1.72.6",
+    "torch>=2.7.1",
+    "transformers>=4.52.4",
+]
+
+[project.optional-dependencies]
+quantization = [
+    "bitsandbytes>=0.46.0",
+]
+tokenizer = [
+    "protobuf>=6.31.1",
+    "sentencepiece>=0.2.0",
+]
+all = [
+    "bitsandbytes>=0.46.0",
+    "protobuf>=6.31.1",
+    "sentencepiece>=0.2.0",
+]
+
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/arkaprovob/llm-hf-local-adapter"
+Documentation = "https://github.com/arkaprovob/llm-hf-local-adapter#readme"
+Issues = "https://github.com/arkaprovob/llm-hf-local-adapter/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hf_local_adapter"]
+exclude = [
+    "tests/",
+    "docs/",
+    "*.tmp",
+    ".git/",
+    ".idea",
+]
