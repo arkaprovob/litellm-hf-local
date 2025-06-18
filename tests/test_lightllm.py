@@ -8,15 +8,19 @@ from src import ModelConfig, HuggingFaceLocalAdapterV2
 config = ModelConfig(
     model_id="microsoft/Phi-4-reasoning",
     device="cuda:0",
-    load_in_4bit=True
+    load_in_4bit=True,
+    trust_remote_code=False
 )
 
 # Create adapter
 adapter = HuggingFaceLocalAdapterV2(
     model_config=config,
     context_window=4096,
-    temperature=0.7,
-    max_new_tokens=4096,
+    temperature=0.8,
+    top_p=0.95,
+    top_k=50,
+    do_sample=True,
+    max_new_tokens=32768,
 )
 
 # Use with LiteLLM

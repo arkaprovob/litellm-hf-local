@@ -14,7 +14,7 @@ class ModelConfig:
     model_id: str
     device: str = "cuda:0"
     cache_dir: Optional[str] = None
-    trust_remote_code: bool = True
+    trust_remote_code: bool = False
     load_in_4bit: bool = False
     load_in_8bit: bool = False
     torch_dtype: torch.dtype = torch.bfloat16
