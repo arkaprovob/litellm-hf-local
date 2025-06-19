@@ -122,36 +122,6 @@ sudo apt-get install -y \
 - CUDA toolkit if using GPU quantization
 - Sufficient GPU memory for quantized models
 
-## Alternative Solutions
-
-### 1. CPU-only Mode
-If you don't need GPU quantization:
-```python
-# Disable quantization for CPU-only usage
-adapter = HuggingFaceLocalAdapterV2(
-    model_id="microsoft/Phi-4-reasoning",
-    device="cpu",  # Force CPU
-    load_in_4bit=False,  # Disable quantization
-)
-```
-
-### 2. Pre-compiled Wheels
-Some platforms offer pre-compiled wheels that don't require compilation:
-```bash
-# Check if pre-compiled wheels are available
-uv pip install --only-binary=all bitsandbytes
-```
-
-### 3. Alternative Quantization
-Consider other quantization methods that don't require runtime compilation:
-```python
-# Use torch's native quantization instead
-adapter = HuggingFaceLocalAdapterV2(
-    model_id="microsoft/Phi-4-reasoning",
-    torch_dtype=torch.float16,  # Half precision instead of 4-bit
-)
-```
-
 ## Testing Your Setup
 
 After installing the dependencies, verify everything works:
@@ -175,23 +145,6 @@ uv run python tests/test_lightllm.py
 ### Ubuntu/Debian
 ```bash
 sudo apt-get install -y build-essential python3.12-dev
-```
-
-### CentOS/RHEL/Fedora
-```bash
-sudo yum groupinstall "Development Tools"
-sudo yum install python3.12-devel
-```
-
-### Alpine Linux (Docker)
-```bash
-apk add --no-cache build-base python3-dev
-```
-
-### macOS
-```bash
-# Usually works out of the box with Xcode Command Line Tools
-xcode-select --install
 ```
 
 This issue is specific to systems where Python packages need to compile C extensions at runtime. The quantization libraries are performance-critical and often compile optimized code for your specific hardware configuration.

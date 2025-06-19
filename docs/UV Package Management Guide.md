@@ -1,17 +1,7 @@
 # LiteLLM HF Local - UV Package Management Guide
 
-A comprehensive guide for managing the LiteLLM HF Local package using uv, covering installation, dependency management,
+A brief guide for managing the LiteLLM HF Local package using uv, covering installation, dependency management,
 and development workflows.
-
-## Features
-
-- ✅ **Local Model Execution**: Run HuggingFace models on your own hardware
-- ✅ **Streaming Support**: Real-time token streaming for better UX
-- ✅ **Async Operations**: Full async/await support for better concurrency
-- ✅ **4-bit/8-bit Quantization**: Reduce memory usage with bitsandbytes integration
-- ✅ **Multiple Models**: Run multiple models simultaneously
-- ✅ **LiteLLM Proxy Compatible**: Works with LiteLLM's OpenAI-compatible proxy server
-- ✅ **Automatic Chat Templates**: Smart detection and application of model-specific chat formats
 
 ## Requirements
 
@@ -400,8 +390,8 @@ uv sync  # Install new dependencies
 
 ## Support
 
-- 📖 **Documentation**: [GitHub README](https://github.com/arkaprovob/llm-hf-local-adapter#readme)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/arkaprovob/llm-hf-local-adapter/issues)
+- 📖 **Documentation**: [GitHub README](https://github.com/arkaprovob/litellm-hf-local/blob/master/README.md)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/arkaprovob/litellm-hf-local/issues)
 - 💬 **Discussions**: Create an issue for questions
 
 ---

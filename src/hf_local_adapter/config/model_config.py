@@ -31,3 +31,14 @@ class ModelConfig:
 
     # Tokenizer-specific kwargs
     tokenizer_kwargs: Dict[str, Any] = field(default_factory=dict)
+    
+    # Memory monitoring
+    show_memory_usage: bool = True
+    
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        if self.load_in_4bit and self.load_in_8bit:
+            raise ValueError(
+                "Cannot use both 4-bit and 8-bit quantization simultaneously. "
+                "Please set only one of 'load_in_4bit' or 'load_in_8bit' to True."
+            )

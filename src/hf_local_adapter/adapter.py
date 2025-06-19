@@ -22,7 +22,13 @@ from transformers import (
 from .config import ModelConfig
 from .formatting import MessageFormatter
 from .generation import GenerationParameterManager
-from .utils import TokenizationUtils, setup_logging
+from .utils import (
+    TokenizationUtils, 
+    setup_logging,
+    print_gpu_memory_usage,
+    print_model_device_map,
+    print_model_memory_footprint
+)
 
 logger = setup_logging()
 
@@ -185,6 +191,20 @@ class HuggingFaceLocalAdapterV2(CustomLLM):
                 torch_dtype=self.model_config.torch_dtype,
                 **model_kwargs
             )
+            
+            # Print memory usage information if enabled
+            if self.model_config.show_memory_usage:
+                print_model_memory_footprint(
+                    self.model, 
+                    f"Model Memory Footprint: {self.model_config.model_id}"
+                )
+                print_model_device_map(
+                    self.model,
+                    f"Device Mapping: {self.model_config.model_id}"
+                )
+                print_gpu_memory_usage(
+                    f"GPU Memory After Loading: {self.model_config.model_id}"
+                )
 
     def completion(self, *args, **kwargs) -> ModelResponse:
         """Generate a completion for the given prompt."""
