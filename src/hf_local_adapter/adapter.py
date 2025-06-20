@@ -355,7 +355,8 @@ class HuggingFaceLocalAdapterV2(CustomLLM):
     async def acompletion(self, *args, **kwargs) -> ModelResponse:
         """Async version of completion."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, self.completion, *args, **kwargs)
+        # Use lambda to properly pass arguments to run_in_executor
+        return await loop.run_in_executor(None, lambda: self.completion(*args, **kwargs))
 
     async def astreaming(self, *args, **kwargs) -> AsyncIterator[GenericStreamingChunk]:
         """Async streaming completion."""

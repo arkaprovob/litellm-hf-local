@@ -53,14 +53,29 @@ class GenerationParameterManager:
         """Prepare generation kwargs by merging defaults with provided kwargs."""
         gen_kwargs = self.default_params.copy()
 
-        # List of LiteLLM-specific parameters to exclude
-        litellm_params = {"stream", "messages", "prompt", "model", "api_key", "api_base"}
+        # Extended list of LiteLLM-specific parameters to exclude
+        litellm_params = {
+            "stream", "messages", "prompt", "model", "api_key", "api_base",
+            "max_tokens", "max_retries", "timeout", "api_version", "organization",
+            "custom_llm_provider", "litellm_call_id", "litellm_logging_obj",
+            "logger_fn", "proxy_server_request", "acompletion", "metadata"
+        }
+
+        # Map common parameters (e.g., max_tokens -> max_new_tokens)
+        param_mapping = {
+            "max_tokens": "max_new_tokens"
+        }
 
         # Override with any provided kwargs (excluding LiteLLM-specific ones)
         for key in ["temperature", "top_p", "top_k", "max_new_tokens",
                     "repetition_penalty", "do_sample"]:
             if key in kwargs:
                 gen_kwargs[key] = kwargs[key]
+        
+        # Handle parameter mapping
+        for litellm_key, hf_key in param_mapping.items():
+            if litellm_key in kwargs and hf_key not in gen_kwargs:
+                gen_kwargs[hf_key] = kwargs[litellm_key]
 
         # Add stopping criteria
         gen_kwargs["stopping_criteria"] = self.stopping_criteria
