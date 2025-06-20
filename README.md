@@ -161,6 +161,17 @@ for chunk in response:
         print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
+### 🌐 LiteLLM Proxy Server
+
+Want to serve your local models through an OpenAI-compatible REST API? Check out our [**LiteLLM Proxy Setup Guide**](docs/LiteLLM%20Proxy%20Setup%20Guide.md) to learn how to:
+
+- 🚀 **Serve models via REST API** - OpenAI-compatible endpoints for easy integration
+- 🔄 **Enable streaming responses** - Real-time token generation via Server-Sent Events
+- 🏥 **Monitor model health** - Built-in health check endpoints
+- 📱 **Use with any OpenAI SDK** - Drop-in replacement for OpenAI API calls
+
+This allows you to use your local HuggingFace models with any tool that supports the OpenAI API!
+
 ### Advanced Configuration
 
 ```python
