@@ -16,7 +16,7 @@ The LiteLLM proxy server allows you to serve your local HuggingFace models with 
 
 ### 1. Configure Your Model
 
-Edit the `custom_handler.py` file to configure your desired HuggingFace model:
+Create or edit a model handler in the `handlers` directory. For example, to configure Qwen, edit `handlers/qwen_handler.py`:
 
 ```python
 from src import ModelConfig, HuggingFaceLocalAdapterV2
@@ -40,6 +40,8 @@ adapter = HuggingFaceLocalAdapterV2(
 )
 ```
 
+To add a new model, create a new file in the `handlers` directory following this pattern.
+
 ### 2. Configure LiteLLM Proxy
 
 The `litellm_config.yaml` file defines how the proxy server exposes your model:
@@ -53,8 +55,10 @@ model_list:
 # Proxy settings
 litellm_settings:
   custom_provider_map:
-  - {"provider": "huggingface-local", "custom_handler": custom_handler.adapter}
+  - {"provider": "huggingface-local", "custom_handler": "handlers.qwen_handler.adapter"}
 ```
+
+Note that the `custom_handler` now references the module path to your adapter object.
 
 ### 3. Start the Server
 
@@ -215,7 +219,7 @@ for chunk in stream:
 
 ### Model Configuration
 
-In `custom_handler.py`, you can configure:
+In your handler file (e.g., `handlers/qwen_handler.py`), you can configure:
 
 - **model_id**: HuggingFace model identifier
 - **device**: CUDA device or "cpu"
@@ -241,7 +245,7 @@ In `litellm_config.yaml`, you can:
 
 1. **"model_kwargs not recognized" error**: The adapter now filters out LiteLLM-specific parameters. Check that the parameter mapping is working correctly.
 
-2. **Out of memory**: Try enabling 4-bit quantization in `custom_handler.py`:
+2. **Out of memory**: Try enabling 4-bit quantization in your handler file:
    ```python
    config = ModelConfig(
        model_id="your-model",
@@ -267,7 +271,9 @@ litellm --config litellm_config.yaml
 
 ### Multiple Models
 
-You can serve multiple models by adding them to `litellm_config.yaml`:
+You can serve multiple models by:
+1. Creating a handler for each model in the `handlers` directory
+2. Adding them to `litellm_config.yaml`:
 
 ```yaml
 model_list:
@@ -275,9 +281,15 @@ model_list:
     litellm_params:
       model: huggingface-local/Qwen2.5-0.5B-Instruct
       
-  - model_name: qwen-large  
+  - model_name: llama-local  
     litellm_params:
-      model: huggingface-local/Qwen2.5-1.5B-Instruct
+      model: huggingface-local/Llama-3-8B
+
+# Proxy settings
+litellm_settings:
+  custom_provider_map:
+  - {"provider": "huggingface-local", "custom_handler": "handlers.qwen_handler.adapter"}
+  - {"provider": "huggingface-local", "custom_handler": "handlers.llama_handler.adapter"}
 ```
 
 ### Custom System Prompts

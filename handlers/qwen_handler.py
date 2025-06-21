@@ -2,9 +2,7 @@ import sys
 import os
 
 # Ensure the src directory is in the Python path
-# sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src import ModelConfig, HuggingFaceLocalAdapterV2
 
@@ -24,4 +22,4 @@ adapter = HuggingFaceLocalAdapterV2(
     top_k=50,
     do_sample=True,
     max_new_tokens=512,
-)
+) 

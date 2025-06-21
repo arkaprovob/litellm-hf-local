@@ -6,4 +6,4 @@ model_list:
 # Proxy settings
 litellm_settings:
   custom_provider_map:
-  - {"provider": "huggingface-local", "custom_handler": custom_handler.adapter}
+  - {"provider": "huggingface-local", "custom_handler": "handlers.qwen_handler.adapter"}
