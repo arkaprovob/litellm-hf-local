@@ -1,0 +1,9 @@
+model_list:
+  - model_name: qwen-local                        # Name that clients will use
+    litellm_params:
+      model: huggingface-local/Qwen2.5-0.5B-Instruct  # This should match your custom provider
+
+# Proxy settings
+litellm_settings:
+  custom_provider_map:
+  - {"provider": "huggingface-local", "custom_handler": "handlers.qwen_handler.adapter"}

@@ -6,7 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "accelerate>=1.7.0",
     "hatchling>=1.27.0",
-    "litellm>=1.72.6",
+    "litellm[proxy]>=1.72.6",
     "torch>=2.7.1",
     "transformers>=4.52.4",
 ]
@@ -24,6 +24,9 @@ all = [
     "protobuf>=6.31.1",
     "sentencepiece>=0.2.0",
 ]
+lite-proxy = [
+    "prisma>=0.15.0",
+]
 
 
 [project.readme]
@@ -31,9 +34,9 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.urls]
-Homepage = "https://github.com/arkaprovob/llm-hf-local-adapter"
-Documentation = "https://github.com/arkaprovob/llm-hf-local-adapter#readme"
-Issues = "https://github.com/arkaprovob/llm-hf-local-adapter/issues"
+Homepage = "https://github.com/arkaprovob/litellm-hf-local"
+Documentation = "https://github.com/arkaprovob/litellm-hf-local#readme"
+Issues = "https://github.com/arkaprovob/litellm-hf-local/issues"
 
 [build-system]
 requires = ["hatchling"]
