@@ -8,7 +8,7 @@ The LiteLLM proxy server allows you to serve your local HuggingFace models with 
 
 ## Prerequisites
 
-- Python 3.8+
+- Python 3.11+
 - CUDA-capable GPU (recommended)
 - Installed dependencies from `pyproject.toml`
 
