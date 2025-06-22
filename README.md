@@ -6,6 +6,116 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+
+## 🚀 Quick Start
+
+
+
+### 🌐 LiteLLM Proxy Server
+
+Want to serve your local models through an OpenAI-compatible REST API? Check out the [**LiteLLM Proxy Setup Guide**](docs/LiteLLM%20Proxy%20Setup%20Guide.md) to learn how to:
+
+- 🚀 **Serve models via REST API** - OpenAI-compatible endpoints for easy integration
+- 🔄 **Enable streaming responses** - Real-time token generation via Server-Sent Events
+- 🏥 **Monitor model health** - Built-in health check endpoints
+- 📱 **Use with any OpenAI SDK** - Drop-in replacement for OpenAI API calls
+
+This allows you to use your local HuggingFace models with any tool that supports the OpenAI API!
+
+### Basic Usage
+
+```python
+from src import HuggingFaceLocalAdapterV2, ModelConfig
+import litellm
+
+# Configure your model
+config = ModelConfig(
+    model_id="microsoft/Phi-4-reasoning",
+    device="cuda:0",
+    load_in_4bit=True,  # Enable 4-bit quantization
+    trust_remote_code=True
+)
+
+# Create the adapter
+adapter = HuggingFaceLocalAdapterV2(
+    model_config=config,
+    context_window=4096,
+    temperature=0.8,
+    max_new_tokens=512
+)
+
+# Register with LiteLLM
+litellm.custom_provider_map = [
+    {"provider": "huggingface-local", "custom_handler": adapter}
+]
+
+# Use it like any LiteLLM model!
+response = litellm.completion(
+    model="huggingface-local/Phi-4-reasoning",
+    messages=[
+        {"role": "system", "content": "You are a helpful AI assistant."},
+        {"role": "user", "content": "Explain quantum computing in simple terms."}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+### Streaming Example
+
+```python
+# Enable streaming
+response = litellm.completion(
+    model="huggingface-local/Phi-4-reasoning", 
+    messages=[
+        {"role": "user", "content": "Write a story about AI and humanity."}
+    ],
+    stream=True
+)
+
+for chunk in response:
+    if chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+```
+
+
+
+### Advanced Configuration
+
+```python
+from src import HuggingFaceLocalAdapterV2, ModelConfig
+import torch
+
+# Advanced model configuration
+config = ModelConfig(
+    model_id="meta-llama/Llama-3.1-8B-Instruct",
+    device="cuda:0",
+    load_in_4bit=True,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+    max_memory={0: "10GB", 1: "10GB"},
+    quantization_config={
+        "load_in_4bit": True,
+        "bnb_4bit_compute_dtype": torch.bfloat16,
+        "bnb_4bit_quant_type": "nf4",
+        "bnb_4bit_use_double_quant": True,
+    }
+)
+
+# Create adapter with custom generation parameters
+adapter = HuggingFaceLocalAdapterV2(
+    model_config=config,
+    context_window=8192,
+    max_new_tokens=1024,
+    temperature=0.7,
+    top_p=0.9,
+    top_k=50,
+    repetition_penalty=1.1,
+    stopping_ids=[128001, 128009],  # Custom stop tokens
+)
+```
+
+
 ## 🚀 Why This Exists
 
 **TL;DR: For the experimenters, the tinkerers, and the "I want it now" crowd.**
@@ -103,109 +213,6 @@ pip install "litellm-hf-local[all]"
 
 > **💡 Ubuntu Users**: If you encounter compilation errors, see our [Quantization Dependencies Troubleshooting Guide](docs/Quantization%20Dependencies%20Troubleshooting%20Guide.md)
 
-## 🚀 Quick Start
-
-### Basic Usage
-
-```python
-from src import HuggingFaceLocalAdapterV2, ModelConfig
-import litellm
-
-# Configure your model
-config = ModelConfig(
-    model_id="microsoft/Phi-4-reasoning",
-    device="cuda:0",
-    load_in_4bit=True,  # Enable 4-bit quantization
-    trust_remote_code=True
-)
-
-# Create the adapter
-adapter = HuggingFaceLocalAdapterV2(
-    model_config=config,
-    context_window=4096,
-    temperature=0.8,
-    max_new_tokens=512
-)
-
-# Register with LiteLLM
-litellm.custom_provider_map = [
-    {"provider": "huggingface-local", "custom_handler": adapter}
-]
-
-# Use it like any LiteLLM model!
-response = litellm.completion(
-    model="huggingface-local/Phi-4-reasoning",
-    messages=[
-        {"role": "system", "content": "You are a helpful AI assistant."},
-        {"role": "user", "content": "Explain quantum computing in simple terms."}
-    ]
-)
-
-print(response.choices[0].message.content)
-```
-
-### Streaming Example
-
-```python
-# Enable streaming
-response = litellm.completion(
-    model="huggingface-local/Phi-4-reasoning", 
-    messages=[
-        {"role": "user", "content": "Write a story about AI and humanity."}
-    ],
-    stream=True
-)
-
-for chunk in response:
-    if chunk.choices[0].delta.content:
-        print(chunk.choices[0].delta.content, end="", flush=True)
-```
-
-### 🌐 LiteLLM Proxy Server
-
-Want to serve your local models through an OpenAI-compatible REST API? Check out our [**LiteLLM Proxy Setup Guide**](docs/LiteLLM%20Proxy%20Setup%20Guide.md) to learn how to:
-
-- 🚀 **Serve models via REST API** - OpenAI-compatible endpoints for easy integration
-- 🔄 **Enable streaming responses** - Real-time token generation via Server-Sent Events
-- 🏥 **Monitor model health** - Built-in health check endpoints
-- 📱 **Use with any OpenAI SDK** - Drop-in replacement for OpenAI API calls
-
-This allows you to use your local HuggingFace models with any tool that supports the OpenAI API!
-
-### Advanced Configuration
-
-```python
-from src import HuggingFaceLocalAdapterV2, ModelConfig
-import torch
-
-# Advanced model configuration
-config = ModelConfig(
-    model_id="meta-llama/Llama-3.1-8B-Instruct",
-    device="cuda:0",
-    load_in_4bit=True,
-    torch_dtype=torch.bfloat16,
-    device_map="auto",
-    max_memory={0: "10GB", 1: "10GB"},
-    quantization_config={
-        "load_in_4bit": True,
-        "bnb_4bit_compute_dtype": torch.bfloat16,
-        "bnb_4bit_quant_type": "nf4",
-        "bnb_4bit_use_double_quant": True,
-    }
-)
-
-# Create adapter with custom generation parameters
-adapter = HuggingFaceLocalAdapterV2(
-    model_config=config,
-    context_window=8192,
-    max_new_tokens=1024,
-    temperature=0.7,
-    top_p=0.9,
-    top_k=50,
-    repetition_penalty=1.1,
-    stopping_ids=[128001, 128009],  # Custom stop tokens
-)
-```
 
 ## 🎯 Model Compatibility
 
