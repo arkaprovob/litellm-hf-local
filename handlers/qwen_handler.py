@@ -1,7 +1,7 @@
 import sys
 import os
 
-from ..src import ModelConfig, HuggingFaceLocalAdapterV2
+from src.hf_local_adapter import ModelConfig, HuggingFaceLocalAdapterV2
 config = ModelConfig(
     model_id="Qwen/Qwen2.5-0.5B-Instruct",
     device="cuda:0",
